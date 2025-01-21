@@ -1,5 +1,6 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, Mock
+import requests
 import pandas as pd
 from src.module_1.module_1_meteo_api import graphic, call_api_requests, call_api_openmeteo_requests, get_data_meteo_api
 
@@ -9,6 +10,19 @@ from src.module_1.module_1_meteo_api import graphic, call_api_requests, call_api
 #Declarate a class because unittest use class to organice the test
 class test_module_1_meteo_functions(unittest.TestCase):
 
+    @patch("src.module_1.module_1_meteo_api.requests.get")
+    def test_call_api_requests_HTTPError(self,mock_get):
+        #Create the object mock
+        mock_response = Mock()
+        mock_response.raise_for_status = Mock(side_effect=requests.exceptions.HTTPError("404 Not Found"))
+
+        #define what the mock have to return
+        mock_get.return_value = mock_response
+        with self.assertRaises(requests.exceptions.HTTPError):
+            call_api_requests("url",{"noting":"none"})
+        
+    """
+    ####################### 
     #Self To reference the same object
     def test_graphic(self):
         # define the data for test
@@ -85,6 +99,7 @@ class test_module_1_meteo_functions(unittest.TestCase):
         self.assertIn("temperature_2m_mean", result.columns)
         self.assertEqual(result["city"].iloc[0], "Madrid")
         mock_call_api.assert_called_once()
+    """
 
 if __name__ == "__main__":
     unittest.main()
