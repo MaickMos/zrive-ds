@@ -2,10 +2,13 @@ import openmeteo_requests
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
-#the Libraries were taken from  https://open-meteo.com/en/docs
+#the Library were taken from  https://open-meteo.com/en/docs
+#pip install openmeteo-requests #poetry add openmeteo-requests
 
-"""
-
+"""First, I wrote the code using the openmeteo_requests library, which is available at https://open-meteo.com/en/docs.
+This library get the data in a little different compared to requests.
+Later, I realized that it had to be done using only the requests library and a generic function for this.
+So, I did another functions. I left both methods to get and process the data: requests and openmeteo_requests.
 """
 
 def graphic(weather,variables_to_graph,frequency):
@@ -83,21 +86,27 @@ def call_api_requests(url, params):
     try:
         #Do the request to the client
         response = requests.get(url,params=params)
+        #the raise for any exception of the answer
         response.raise_for_status()
-        if response.status_code == "200":
-            return response
+        print(f"Status code: {response.status_code}")
+
+        return response
 
     except requests.exceptions.HTTPError as e:
-        print(f"Error HTTP : {e}")
+        print(f"Error HTTP F : {e}")
+        raise
 
     except requests.exceptions.ConnectionError as e:
         print(f"Error of connection: {e}")
+        raise
 
     except requests.exceptions.Timeout as e:
         print(f"Error of Timeout: {e}")
+        raise
 
     except Exception as e:
         print(f"Problem unexpected :{e}")
+        raise
 
 def call_api_openmeteo_requests(url, params):
 
@@ -125,20 +134,8 @@ def call_api_openmeteo_requests(url, params):
         response = request_API_meteo.weather_api(url, params=params)
         #this request get a list of object WeatherApiResponse
         #request = response[0]
-        #veriicate the state of request
-        #if is 200 is correct, get the data
-        
-
-        if response[0].__getstate__ == 200:
-            daily = response[0].Daily()
-            print("Get the data correctly")
-            return daily
-        else:
-            print("Get the data from API, but error not code 200")
-
-        #the object WeatherApiResponse doesn't have the atribute getstate (i found __getstate__ but doesn't work)
-        #so for now im not do the status code and just return the object
-
+        """ The mainly problem was this response doesn't have a statuscode or raise_for_status
+        so i didn't the exception for this function"""
         daily = response[0].Daily()
         return daily
 
@@ -269,6 +266,7 @@ def main():
     frequency = "A"
 
     data = get_data_meteo_api(cities,start_date,end_date)
+    #data = get_data_meteo_api_openmeteo_requests(cities,start_date,end_date)
     graphic(data,variables_to_graph,frequency)
 
 if __name__ == "__main__":
