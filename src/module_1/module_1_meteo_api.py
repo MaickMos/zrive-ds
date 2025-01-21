@@ -4,7 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 #the Libraries were taken from  https://open-meteo.com/en/docs
 
+"""
 
+"""
 
 def graphic(weather,variables_to_graph,frequency):
 
@@ -78,19 +80,24 @@ def call_api_requests(url, params):
     Retorna:
     a type object response
     """
+    try:
+        #Do the request to the client
+        response = requests.get(url,params=params)
+        response.raise_for_status()
+        if response.status_code == "200":
+            return response
 
-    #Do the request to the client
-    response = requests.get(url, params=params, headers=None, timeout=10)
+    except requests.exceptions.HTTPError as e:
+        print(f"Error HTTP : {e}")
 
-    #veriicate the state of request
-    #if is 200 is correct, get the data
-    if response.status_code == 200:
-        daily = response.Daily()
-        print("Get the data correctly")
-        return daily
-    else:
-        print("Error not code 200")
+    except requests.exceptions.ConnectionError as e:
+        print(f"Error of connection: {e}")
 
+    except requests.exceptions.Timeout as e:
+        print(f"Error of Timeout: {e}")
+
+    except Exception as e:
+        print(f"Problem unexpected :{e}")
 
 def call_api_openmeteo_requests(url, params):
 
@@ -137,10 +144,63 @@ def call_api_openmeteo_requests(url, params):
 
     except Exception as e:
         print("Error in :", e)
-        
 
 def get_data_meteo_api(cities,start_date,end_date):
+    """
+    Get the meteorology data from API openmeteo_requests
+
+    Parámetros:
+    - cities: list of the list to get data
+    - start_date: date initial to get the data
+        "2010-01-01"
+    - end_date: date final to get the data
+        "2020-12-31"
     
+    Retorna:
+    A dataframe of the cities and variables
+    """
+
+    #From initial code:
+    API_URL = "https://archive-api.open-meteo.com/v1/archive?"
+    COORDINATES = {
+    "Madrid": {"latitude": 40.416775, "longitude": -3.703790},
+    "London": {"latitude": 51.507351, "longitude": -0.127758},
+    "Rio": {"latitude": -22.906847, "longitude": -43.172896},}
+    VARIABLES = ["temperature_2m_min","temperature_2m_max", "precipitation_sum", "wind_speed_10m_max"]
+
+    cities_list_dataframe = []
+        #Do the cicle for each city in list cities
+    for city in cities:
+        #Parameters for the request to the API
+        params = {
+            "latitude" :COORDINATES[city]["latitude"],
+            "longitude":COORDINATES[city]["longitude"],
+            "start_date": start_date,
+            "end_date": end_date,
+            "daily": ",".join(VARIABLES)}
+
+        response = call_api_requests(API_URL,params)
+
+        dicctionary_response = response.json()
+        dicctionary_daily = dicctionary_response["daily"]
+        
+        df_cuidad = pd.DataFrame(dicctionary_daily)
+        df_cuidad['date'] = df_cuidad.pop('time')
+        #create a column with the city
+        df_cuidad["city"]=city
+
+        
+        #Create a dataframe and save in a list of dataframe then concat
+        df_cuidad
+        cities_list_dataframe.append(df_cuidad)
+    #join the dataframe in the same dataframe
+    weather  = pd.concat(cities_list_dataframe)
+    #check  if exists the two varaibles of temperature to calculate the mean
+    if "temperature_2m_min" and "temperature_2m_max" in VARIABLES:
+        weather["temperature_2m_mean"] = (weather["temperature_2m_min"]+weather["temperature_2m_max"])/2
+    return weather
+    
+def get_data_meteo_api_openmeteo_requests(cities,start_date,end_date):
     """
     Get the meteorology data from API openmeteo_requests
 
@@ -200,7 +260,6 @@ def get_data_meteo_api(cities,start_date,end_date):
         weather["temperature_2m_mean"] = (weather["temperature_2m_min"]+weather["temperature_2m_max"])/2
     
     return weather    
-
 
 def main():
     cities = ["Madrid","London","Rio"]
