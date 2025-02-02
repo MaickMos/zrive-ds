@@ -165,3 +165,4 @@ data/sampled-datasets/orders.parquet
 data/sampled-datasets/regulars.parquet
 data/sampled-datasets/users.parquet
 data/trained-models/model.joblib
+config.json
