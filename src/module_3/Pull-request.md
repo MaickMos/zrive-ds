@@ -21,8 +21,8 @@ Se intentaron dos formas de división:
  * Entrenamiento 70% -   2020-10-05 hasta 2021-02-04
  * Testeo 20%: 2021-02-04 hasta 2021-02-22
  * Validación 10%: 2021-02-22 hasta 2021-03-03
-    Como se observa en la gráfica de comportamiento de número de ventas, el comportamiento del mercado presenta un cambio en la forma de comprar de los usuario, afectando directamente en las posibles predicciones del modelo.
-    ![graficas](https://github.com/MaickMos/zrive-ds/src/module_3/images/Image_1.png)
+    Como se observa en la gráfica de comportamiento de número de ventas, el comportamiento del mercado presenta un cambio en la forma de comprar de los usuario, afectando directamente en las posibles predicciones del modelo.  
+    ![graficas](https://github.com/MaickMos/zrive-ds/blob/686a77aed98b68f3ab4ad15dad5e737b30cef5ff/src/module_3/images/Image_1.png)
 
 
 ### Eliminación de variables
@@ -67,7 +67,7 @@ Sin embargo al evaluar el modelo en con dataset test se evidencia que no ha sido
 Se entrenó nuevamente el modelo aplicando una regulación Ridge de 0.1. Se evidenciaron los mismos resultados que el modelo original tanto en test como en train. se graficó el comportamiento del train y el test comparado con el baseline, como se puede ver en la siguiente gráfica:
 
 
-![graficas](https://github.com/MaickMos/zrive-ds/src/module_3/images/Image_2.png)
+![graficas](https://github.com/MaickMos/zrive-ds/blob/686a77aed98b68f3ab4ad15dad5e737b30cef5ff/src/module_3/images/Image_2.png)  
 
 
 
@@ -77,21 +77,21 @@ Seguidamente se graficó el comportamiento frente a otros valores de regulación
 
 En el entrenamiento:
 Se puede ver un comportamiento similar a el modelo base, teniendo un valor que cambia la dinámica c=0.000001, mostrando un mejor desempeño en ciertas áreas.
-![graficas](https://github.com/MaickMos/zrive-ds/src/module_3/images/Image_3.png)
+![graficas](https://github.com/MaickMos/zrive-ds/blob/686a77aed98b68f3ab4ad15dad5e737b30cef5ff/src/module_3/images/Image_3.png)  
 
 
 En el test:
 El modelo no demostró un buen rendimiento, estando aún debajo del Baseline. De nuevo el modelo de C=0.0000001 tiene un mejor rendimiento.
 
 
-![graficas](https://github.com/MaickMos/zrive-ds/src/module_3/images/Image_4.png)
+![graficas](https://github.com/MaickMos/zrive-ds/blob/686a77aed98b68f3ab4ad15dad5e737b30cef5ff/src/module_3/images/Image_4.png)  
 
 
 ### Logistic Regression Lasso
 Se realizaron las mismas pruebas con la regulación de Lasso. Donde de manera general se obtienen mejores resultados superando al baseline. En específico el modelo de mayor con rendimiento es regulación lasso C = 0.0001 con un AUC en la gráfica ROC de 0.83.
 
 
-![graficas](https://github.com/MaickMos/zrive-ds/src/module_3/images/Image_5.png)
+![graficas](https://github.com/MaickMos/zrive-ds/blob/686a77aed98b68f3ab4ad15dad5e737b30cef5ff/src/module_3/images/Image_5.png)  
 
 
 ## Pesos de las variables
@@ -105,7 +105,7 @@ Las demás variables tienen valor de cero, por lo tanto no aportan al entrenamie
 ## Product type
 Por último se realizó un entrenamiento con las tres variables que mas aportan al modelo y se implementó la variable de product type con categorical encoding. Esto para comprobar si se obtiene un mejor rendimiento usando esta variable que presenta una alta cardinalidad teniendo 62 valores únicos.
 Se realiza la preparación del dataset, entrenamiento del modelo regresión logística con regulación Lasso y ridge de C=0.0001 y se comparó con este mismo modelo sin implementar la variable de producty type.
-![graficas](https://github.com/MaickMos/zrive-ds/src/module_3/images/Image_6.png)
+![graficas](https://github.com/MaickMos/zrive-ds/blob/686a77aed98b68f3ab4ad15dad5e737b30cef5ff/src/module_3/images/Image_6.png)  
 
 
 En la gráfica Ridge muestra un comportamiento mejor que Baseline, sin embargo los que presentan un mayor desempeño son Lasso, mostrando el mismo comportamiento aunque se haya entrenado con categorical type. Se observa el peso de las categorías y dado que Lasso baja los coeficientes bajos a cero, nuevamente solo están presentes las tres mismas variables.
