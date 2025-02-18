@@ -4,9 +4,8 @@ import joblib
 import os
 from pathlib import Path
 
-def load_data_from_csv(
-    file_path: str
-    ):
+
+def load_data_from_csv(file_path: str):
     try:
 
         if not os.path.exists(file_path):
@@ -14,13 +13,31 @@ def load_data_from_csv(
 
         df = pd.read_csv(file_path)
 
-
-        required_columns = {"user_order_seq","ordered_before","abandoned_before","active_snoozed","set_as_regular","normalised_price","discount_pct","global_popularity","count_adults","count_children","count_babies","count_pets","people_ex_baby","days_since_purchase_variant_id","avg_days_to_buy_variant_id","std_days_to_buy_variant_id","days_since_purchase_product_type","avg_days_to_buy_product_type","std_days_to_buy_product_type"}
+        required_columns = {
+            "user_order_seq",
+            "ordered_before",
+            "abandoned_before",
+            "active_snoozed",
+            "set_as_regular",
+            "normalised_price",
+            "discount_pct",
+            "global_popularity",
+            "count_adults",
+            "count_children",
+            "count_babies",
+            "count_pets",
+            "people_ex_baby",
+            "days_since_purchase_variant_id",
+            "avg_days_to_buy_variant_id",
+            "std_days_to_buy_variant_id",
+            "days_since_purchase_product_type",
+            "avg_days_to_buy_product_type",
+            "std_days_to_buy_product_type",
+        }
 
         if not required_columns.issubset(df.columns):
             raise ValueError("Missing required columns in dataset!")
         return df
-            
 
     except FileNotFoundError as e:
         print(f"Error not found: {file_path}")
@@ -31,33 +48,32 @@ def load_data_from_csv(
         print(f"Error loading data: {e}")
         return None
 
-def preprocess_data(
-        df:pd.DataFrame,
-        user_id:list | int,
-        variant_id:list | int
-        ):
+
+def preprocess_data(df: pd.DataFrame, user_id: list | int, variant_id: list | int):
 
     dataframe = pd.DataFrame()
 
     for i in range(len(user_id)):
-        df_filter = df[(df["user_id"] == user_id[i]) & (df["variant_id"] == variant_id[i])]
+        df_filter = df[
+            (df["user_id"] == user_id[i]) & (df["variant_id"] == variant_id[i])
+        ]
 
-        if not df_filter.empty:           
-            dataframe[f"{i+1}"] = df_filter[["ordered_before","global_popularity","abandoned_before"]].iloc[0]
+        if not df_filter.empty:
+            dataframe[f"{i+1}"] = df_filter[
+                ["ordered_before", "global_popularity", "abandoned_before"]
+            ].iloc[0]
         else:
             print(f"Not exit data for user:{user_id}  or product:{variant_id}")
-            dataframe[f"{i+1}"] = [None, None, None] 
+            dataframe[f"{i+1}"] = [None, None, None]
 
     if dataframe.empty:
         print(f"No user or product in database")
         return None
-    
+
     return dataframe.T
 
-def load_model_from_path(
-        model: str,#file_path
-        scaler: str#file_path
-    ):
+
+def load_model_from_path(model: str, scaler: str):  # file_path  # file_path
     try:
         model = joblib.load(model)
         scaler = joblib.load(scaler)
@@ -69,46 +85,50 @@ def load_model_from_path(
         return None
     return model, scaler
 
+
 def Standardization_StandardScaler(
-        scaler: object,#StandardScaler
-        x_train: pd.DataFrame
-        ):
-    
+    scaler: object, x_train: pd.DataFrame  # StandardScaler
+):
+
     x_train_columns = x_train.columns
     x_train = scaler.fit_transform(x_train)
     x_train = pd.DataFrame(x_train, columns=x_train_columns)
     return x_train
 
+
 def predict_probability(
-        user_id: list | int,
-        variant_id: list | int,
-        database_path: str,
-        path_model:str,
-        path_scaler:str
-        ):
-    
+    user_id: list | int,
+    variant_id: list | int,
+    database_path: str,
+    path_model: str,
+    path_scaler: str,
+):
+
     folder_path = Path(database_path)
     data = load_data_from_csv(folder_path)
 
-    data = preprocess_data(data,user_id,variant_id)
-    
+    data = preprocess_data(data, user_id, variant_id)
 
-    model, scaler = load_model_from_path(path_model,path_scaler)
-    x_data = Standardization_StandardScaler(scaler,data)
+    model, scaler = load_model_from_path(path_model, path_scaler)
+    x_data = Standardization_StandardScaler(scaler, data)
     y_pred = model.predict(x_data)
-
 
     return y_pred
 
+
 def main():
-    user_id = [3898225885316,  3879715569796,3896135712900]
-    variant_id = [34037939372164, 34488547967108,34276570890372]
+    # User from dataset with outcome = 1
+    user_id = [3898225885316, 3879715569796, 3896135712900]
+    variant_id = [34037939372164, 34488547967108, 34276570890372]
     database_path = "box_builder_dataset/feature_frame.csv"
-    path_model = "modelo_push_notifications_1.pkl"
-    path_scaler = "scaler.pkl"
-    prediction = predict_probability(user_id, variant_id, database_path,path_model,path_scaler)
+    path_model = "zrive-ds/src/module_3/modelo_push_notifications_1.pkl"
+    path_scaler = "zrive-ds/src/module_3/scaler.pkl"
+    prediction = predict_probability(
+        user_id, variant_id, database_path, path_model, path_scaler
+    )
 
     print(prediction)
+
 
 if __name__ == "__main__":
     main()
