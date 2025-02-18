@@ -19,7 +19,7 @@ Se intentaron dos formas de división:
 
 2. De manera temporal, donde está seccionado de la siguiente manera:
  * Entrenamiento 70% -   2020-10-05 hasta 2021-02-04
- * Testeo 20%: 2021-02-04 hasta 2021-02-22
+ * Testeo 20%: 2021-02-04 hasta 2021-02-22 
  * Validación 10%: 2021-02-22 hasta 2021-03-03
     Como se observa en la gráfica de comportamiento de número de ventas, el comportamiento del mercado presenta un cambio en la forma de comprar de los usuario, afectando directamente en las posibles predicciones del modelo.  
     ![graficas](https://github.com/MaickMos/zrive-ds/blob/686a77aed98b68f3ab4ad15dad5e737b30cef5ff/src/module_3/images/Image_1.png)
