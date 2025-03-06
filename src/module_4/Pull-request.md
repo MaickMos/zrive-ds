@@ -1,8 +1,8 @@
-# Push Notificactions  module #3
+# Push Notificactions  module #4
 En esta PR se hara entrega de la continuacion del modelo predictivo para posibles personas interesadas en un producto. Dado un usuario y producto, se predice si compraria ese producto si estuvieran comprando en ese momento. Condiciones: los usuarios deben ser aquellos que realizan una compra de minimo 5 productos. Esta vez usaron modelos no lineales 
 
 ## Preparacion del dataset
-Se usaron el mismos dataset de la practica anterior y una variacion donde se obesrvaron las principales caracteristicas que toma un random forest para escoger las mas importantes, quedando con 9
+Se usaron el mismos dataset de la practica anterior y una variacion donde se obesrvaron las principales caracteristicas que toma un random forest para escoger las mas importantes, quedando con 9.
 ## Metricas de evaluacion
 Se aplicaron las misma metricas de evaluacion dentro de una funcion y se implemento una nueva con las metricas de 
 - roc_auc_score
