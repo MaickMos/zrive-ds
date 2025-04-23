@@ -2,7 +2,13 @@ import os
 import pandas as pd
 
 
-STORAGE = os.path.abspath(os.path.join(os.path.dirname(__file__), "D:/Users/maick/Desktop/Codigos/zrive-ds/data", "sampled-datasets"))
+STORAGE = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        "D:/Users/maick/Desktop/Codigos/zrive-ds/data",
+        "sampled-datasets",
+    )
+)
 
 
 def load_orders() -> pd.DataFrame:
@@ -21,4 +27,4 @@ def load_regulars() -> pd.DataFrame:
 
 def get_mean_item_price() -> float:
     inventory = pd.read_parquet(os.path.join(STORAGE, "inventory.parquet"))
-    return inventory.price.mean() 
+    return inventory.price.mean()

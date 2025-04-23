@@ -2,7 +2,7 @@ import os
 import joblib
 import numpy as np
 
-#from src.exceptions import PredictionException
+# from src.exceptions import PredictionException
 
 
 MODEL = os.path.abspath(
@@ -17,8 +17,8 @@ class BasketModel:
     def predict(self, features: np.ndarray) -> np.ndarray:
         try:
             pred = self.model.predict(features)
-        #except Exception as exception:
-            #raise PredictionException("Error during model inference") from exception
+        # except Exception as exception:
+        # raise PredictionException("Error during model inference") from exception
         except Exception as e:
             print(f"Error en: {e}")
-        return pred 
+        return pred
