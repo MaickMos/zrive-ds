@@ -2,8 +2,7 @@ import pandas as pd
 
 from src.basket_model.utils import features
 from src.basket_model.utils import loaders
-#from src.exceptions import UserNotFoundException
-
+from src.handlers.logger_config import logger_predict
 
 class FeatureStore:
     def __init__(self):
@@ -27,9 +26,8 @@ class FeatureStore:
     def get_features(self, user_id: str) -> pd.DataFrame:
         try:
             features = self.feature_store.loc[user_id]
-        except Exception as exception:
-            #raise UserNotFoundException(
-            #    "User not found in feature store"
-            #) from exception
-            print(f"Usuario no entrado: {exception}")
-        return features 
+            return features 
+        except KeyError as exception:
+            logger_predict.info(f"user don't found: {exception}")
+            return None
+        
